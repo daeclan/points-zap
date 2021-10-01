@@ -1,5 +1,14 @@
+import React, { useState } from "react"
+import ReactDOM from "react-dom"
 import logo from './logo.svg';
 import './App.css';
+
+function Foo() {
+  const [count, setCount] = useState(0)
+  return <div style={{ opacity: 1 }} />
+}
+
+ReactDOM.render(<Foo />, document.getElementById("root"))
 
 function App() {
   return (
