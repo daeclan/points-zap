@@ -1,15 +1,35 @@
-import { useRef } from 'react'
+import { useRef, useState } from 'react'
 import { Canvas, useFrame } from '@react-three/fiber'
+import { OrbitControls } from '@react-three/drei'
 
-function Cube(props) {
+function Spin({ children }) {
   const ref = useRef()
   useFrame(() => {
     ref.current.rotation.x += 0.01
   })
+  return <group ref={ref}>{children}</group>
+}
+
+function Cube(props) {
+  const [active, setActive] = useState(false)
+  const [hovered, setHovered] = useState(false)
   return (
-    <mesh ref={ref} {...props}>
+    <mesh
+      {...props}
+      scale={hovered ? 1.2 : 1}
+      onClick={() => setActive(!active)}
+      onPointerOver={() => setHovered(true)}
+      onPointerOut={() => setHovered(false)}>
       <boxGeometry args={[5, 5, 5]} />
-      <meshStandardMaterial color="salmon" />
+      <meshStandardMaterial color={active ? "salmon" : "red"} />
+    </mesh>
+  )
+}
+function Plane(props) {
+  return (
+    <mesh>
+      <planeGeometry args={[500, 500, 500]} />
+      <meshStandardMaterial color={"black"} />
     </mesh>
   )
 }
@@ -17,11 +37,15 @@ function Cube(props) {
 export default function App() {
   return (
     <Canvas>
-      <Cube size={[5]} />
       <ambientLight />
       <pointLight position={[10, 10, 15]} />
-      <Cube position={[100.5, -30, 1]} />
-      <Cube position={[-100.5, 1, 1]} />
+      <Plane />
+      <Spin>
+        <Cube size={[5]} />
+      </Spin>
+      <Cube position={[10.5, -1, 1]} />
+      <Cube position={[-10.5, 1, 1]} />
+      <OrbitControls />
     </Canvas>
   )
 }
