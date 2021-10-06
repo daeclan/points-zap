@@ -27,15 +27,6 @@ function Cube(props) {
   )
 }
 
-function Airplane() {
-  const gltf = useLoader(GLTFLoader, '/arwing.glb')
-  return (
-    <Suspense fallback={null}>
-      <primitive object={gltf.scene} />
-    </Suspense>
-  )
-}
-
 function Sphere(props) {
   const [active, setActive] = useState(false)
   const [hovered, setHovered] = useState(false)
