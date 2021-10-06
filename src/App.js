@@ -2,6 +2,7 @@ import { useRef, useState } from 'react'
 import { Canvas, useFrame } from '@react-three/fiber'
 import { OrbitControls } from '@react-three/drei'
 
+
 function Spin({ children }) {
   const ref = useRef()
   useFrame(() => {
@@ -25,10 +26,25 @@ function Cube(props) {
     </mesh>
   )
 }
+function Sphere(props) {
+  const [active, setActive] = useState(false)
+  const [hovered, setHovered] = useState(false)
+  return (
+    <mesh
+      {...props}
+      scale={hovered ? 1.2 : 1}
+      onClick={() => setActive(!active)}
+      onPointerOver={() => setHovered(true)}
+      onPointerOut={() => setHovered(false)}>
+      <sphereGeometry args={[5, 54, 45]} />
+      <meshPhongMaterial color={active ? "salmon" : "red"} />
+    </mesh>
+  )
+}
 function Plane(props) {
   return (
     <mesh>
-      <planeGeometry args={[500, 500, 500]} />
+      <planeGeometry args={[500, 500]} />
       <meshStandardMaterial color={"black"} />
     </mesh>
   )
@@ -36,16 +52,20 @@ function Plane(props) {
 
 export default function App() {
   return (
-    <Canvas>
-      <ambientLight />
-      <pointLight position={[10, 10, 15]} />
-      <Plane />
-      <Spin>
-        <Cube size={[5]} />
-      </Spin>
-      <Cube position={[10.5, -1, 1]} />
-      <Cube position={[-10.5, 1, 1]} />
-      <OrbitControls />
-    </Canvas>
+    <div id="canvas-container">
+      <Canvas style={{ height: 700, width: 1450 }}>
+        <ambientLight />
+        <pointLight position={[10, 10, 15]} />
+        <Plane />
+        <Spin>
+          <Sphere widthSegments={[10]} size={[5]} />
+        </Spin>
+        <Cube position={[10, 0, 0]} />
+        <Cube position={[-10, 0, 0]} />
+        <Cube position={[0, 10, 0]} />
+        <Cube position={[0, -10, 0]} />
+        <OrbitControls />
+      </Canvas>
+    </div>
   )
 }
