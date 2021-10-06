@@ -1,7 +1,7 @@
 import { useRef, useState } from 'react'
-import { Canvas, useFrame } from '@react-three/fiber'
+import { Canvas, useFrame, useLoader } from '@react-three/fiber'
 import { OrbitControls } from '@react-three/drei'
-
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader'
 
 function Spin({ children }) {
   const ref = useRef()
@@ -22,10 +22,20 @@ function Cube(props) {
       onPointerOver={() => setHovered(true)}
       onPointerOut={() => setHovered(false)}>
       <boxGeometry args={[5, 5, 5]} />
-      <meshStandardMaterial color={active ? "salmon" : "red"} />
+      <meshStandardMaterial color={active ? "black" : "maroon"} />
     </mesh>
   )
 }
+
+function Airplane() {
+  const gltf = useLoader(GLTFLoader, '/arwing.glb')
+  return (
+    <Suspense fallback={null}>
+      <primitive object={gltf.scene} />
+    </Suspense>
+  )
+}
+
 function Sphere(props) {
   const [active, setActive] = useState(false)
   const [hovered, setHovered] = useState(false)
@@ -37,7 +47,7 @@ function Sphere(props) {
       onPointerOver={() => setHovered(true)}
       onPointerOut={() => setHovered(false)}>
       <sphereGeometry args={[5, 54, 45]} />
-      <meshPhongMaterial color={active ? "salmon" : "red"} />
+      <meshPhongMaterial color={active ? "black" : "red"} />
     </mesh>
   )
 }
@@ -53,7 +63,8 @@ function Plane(props) {
 export default function App() {
   return (
     <div id="canvas-container">
-      <Canvas style={{ height: 700, width: 1450 }}>
+      <Canvas camera={{ fov: 25, position: [0, 0, 100] }} style={{ height: 700, width: 1450 }}>
+        <ambientLight />
         <ambientLight />
         <pointLight position={[10, 10, 15]} />
         <Plane />
